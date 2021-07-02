@@ -305,7 +305,12 @@ func GetIOSNotification(req PushNotification) *apns2.Notification {
 
 	// add alert object if message length > 0 and title is empty
 	if len(req.Message) > 0 && req.Title == "" {
-		payload.Alert(req.Message)
+		if notification.PushType == apns2.PushTypeVOIP {
+			notification.Payload = req.Message
+			return notification
+		} else {
+			payload.Alert(req.Message)
+		}
 	}
 
 	// zero value for clear the badge on the app icon.
